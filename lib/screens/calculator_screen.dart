@@ -9,9 +9,9 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  int? first = 0;
-  int? second = 0;
   final TextEditingController _numController = TextEditingController();
+  int first = 0;
+  int second = 0;
   final List<String> lstOperatorNumber = [
     "C",
     "",
@@ -34,12 +34,15 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     ".",
     "=",
   ];
+
   final List<String> lstOperator = [
     "+",
     "-",
     "*",
     "/",
   ];
+
+  String operator = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +86,34 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     onPressed: () {
                       if (lstOperatorNumber[index] == "C") {
                         _numController.text = "";
+                      } else if (lstOperatorNumber[index] == "<-") {
+                        _numController.text = _numController.text
+                            .substring(0, _numController.text.length - 1);
+                      } else if (lstOperator
+                          .contains(lstOperatorNumber[index])) {
+                        if (lstOperatorNumber[index] == "+" ||
+                            lstOperatorNumber[index] == "-" ||
+                            lstOperatorNumber[index] == "*" ||
+                            lstOperatorNumber[index] == "/") {
+                          // Set the operator
+                          operator = lstOperatorNumber[index];
+                          // set the first value to first variable
+                          first = int.parse(_numController.text);
+                          _numController.text = "";
+                        }
                       } else if (lstOperatorNumber[index] == "=") {
+                        second = int.parse(_numController.text);
+
+                        // check for the operator and do the calculation
+                        if (operator == "+") {
+                          _numController.text = (first + second).toString();
+                        } else if (operator == "-") {
+                          _numController.text = (first - second).toString();
+                        } else if (operator == "*") {
+                          _numController.text = (first * second).toString();
+                        } else if (operator == "/") {
+                          _numController.text = (first / second).toString();
+                        }
                       } else {
                         _numController.text += lstOperatorNumber[index];
                       }
